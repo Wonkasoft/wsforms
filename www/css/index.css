@@ -24,17 +24,7 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background-color:#E4E4E4;
-    background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-ms-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        color-stop(0, #A7A7A7),
-        color-stop(0.51, #E4E4E4)
-    );
+    background-color:#ffffff;
     background-attachment:fixed;
     font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
     font-size:12px;
@@ -57,6 +47,61 @@ body {
     padding:180px 0px 0px 0px;     /* image height is 200px (bottom 20px are overlapped with text) */
     margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
                                    /* offset horizontal: half of text area width */
+}
+
+form {
+    background: #e8e8e8;
+    margin: 0 10%;
+    padding: 25px 0;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 6px 0 rgba( 0, 0, 0, .4);
+    box-shadow: 0 1px 6px 0 rgba( 0, 0, 0, .4);
+}
+
+form .form-group {
+    margin: 8px 15px;
+}
+
+form .form-group input, form .form-group button {
+    border-radius: 0;
+    line-height: 2;
+    transition: all .3s;
+}
+
+form .form-group input {
+    height: 50px;
+    -webkit-box-shadow: 0 1px 6px 0 rgba( 0, 0, 0, .1);
+    box-shadow: 0 1px 6px 0 rgba( 0, 0, 0, .1);
+}
+
+form .form-group textarea {
+    -webkit-box-shadow: 0 1px 6px 0 rgba( 0, 0, 0, .1);
+    box-shadow: 0 1px 6px 0 rgba( 0, 0, 0, .1);
+}
+
+form .form-group:last-child {
+    margin: 0 15px;
+}
+
+form .form-group button {
+    position: relative;
+    display: inline-block;
+    top: 0;
+    padding: 11px 41px;
+    line-height: 1.7;
+    background: #5aa1e3;
+    border: 1px solid transparent;
+    -webkit-box-shadow: 0 5px 0 #2a86db;
+    box-shadow: 0 5px 0 #2a86db;
+}
+
+form .form-group button:hover {
+    top: 3px;
+    background: #5aa1e3;
+    margin-bottom: 0;
+    border: 1px solid transparent;
+    -webkit-box-shadow: 0 2px 0 #2a86db;
+    box-shadow: 0 2px 0 #2a86db;
 }
 
 /* Landscape layout (with min-width) */
