@@ -94,38 +94,6 @@
 </div>
 </div>
 </div>
-
-<script type="text/javascript">
-    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir) {
-       console.log("got main dir", dir);
-       dir.getFile("myfile.csv", {
-         create: true
-       }, function(file) {
-         console.log("got the file", file);
-         logOb = file;
-         var csv = "";
-         //we should have the same amount of name/cookie fields
-         var name = "testdata1";
-         var cookies = "testdata2",
-           csv = csv + "" + name + "," + cookies + "\n";
-         console.log("csv-" + csv);
-         writeLog(csv);
-       });
-     });
-
-     function writeLog(str) {
-       if (!logOb) return;
-       logOb.createWriter(function(fileWriter) {
-         fileWriter.seek(fileWriter.length);
-
-         var blob = new Blob([str], {
-           type: 'text/plain'
-         });
-         fileWriter.write(blob);
-         console.log("ok, in theory i worked");
-       }, fail);
-     }
-</script>
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/jquery-migrate-1.4.1.min.js"></script>
 <script src="js/bootstrap.js"></script>

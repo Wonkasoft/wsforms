@@ -28,6 +28,69 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
+        document.addEventListener("deviceready", onDeviceReady, false);
+        function onDeviceReady() {
+            window.requestFileSystem(cordova.file.applicationDirectory, 0, gotFS, fail);
+        }
+
+        function gotFS(fileSystem) {
+            console.log(fileSystem);
+            fileSystem.root.getDirectory("DO_NOT_DELETE", 
+                {create: true, exclusive: false}, 
+                gotDirEntry, 
+                fail);
+        }
+        function gotDirEntry(dirEntry) {
+            dir = dirEntry;
+            dirEntry.getFile("sample.json", 
+                {create: false, exclusive: false}, 
+                fileDonotexist, 
+                readSuccess);
+        }
+        function fileDonotexist(dirEntry) {
+            dir.getFile("sample.json", 
+                {create: false, exclusive: false}, 
+                gotFileEntry, 
+                fail);
+        }
+        function gotFileEntry(fileEntryWrite) {
+            fileEntryWrite.createWriter(gotFileWriter, fail);
+            console.log(fileEntryWrite);
+        }
+        function gotFileWriter(writer) {
+            console.log(writer);
+            writer.onerror = function(evt) {
+            console.log('gotFileWriter is running');
+            };
+            
+            writer.write(localData);
+            writer.onwriteend = function(evt) {
+                dir.getFile("sample.json", 
+                    {create: false, exclusive: false}, 
+                    readSuccess, 
+                    fail);
+                console.log(dir);
+            console.log('onwriteend is running');
+            };
+        }
+        function readSuccess(fileE) {
+            fileE.file(readAsText, fail);
+        }
+        function fail(error) {
+            console.log("fail");
+        }
+        function readAsText(readerDummy) {
+            var reader = new FileReader();
+
+            reader.onloadstart = function(evt) {};
+            reader.onprogress = function(evt) {};
+            reader.onerror = function(evt) {};
+
+            reader.onloadend = function(evt) {
+                console.log("read success");
+            };
+            reader.readAsText(readerDummy);
+        }
     },
 
     // Update DOM on a Received Event
@@ -41,6 +104,7 @@ var app = {
 
         // console.log('Received Event: ' + id);
     }
+
 };
 
 app.initialize();
