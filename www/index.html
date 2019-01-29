@@ -44,7 +44,7 @@
                   <div class="text-center"><img class="img-fluid" src="img/mercury-events.png" alt="Logo" /></div>
                   <hr class="hr" />
 
-                  <form method="post">
+                  <form>
                       <div class="form-group row align-items-center justify-content-center">
                         <label class="col-2 col-form-label sr-only" for="fname">First Name *</label> 
                         <div class="col-6">
@@ -87,12 +87,17 @@
 </div> 
 <div class="form-group row align-items-start justify-content-center">
     <div class="col-12">
-      <button name="submit" type="submit" class="btn btn-primary" onclick="submitbtn()">Submit</button>
+      <button name="submit" id="submit" class="btn btn-primary">Submit</button>
   </div>
 </div>
 </form>
 </div>
 </div>
+  <div class="row">
+    <div class="col text-center">
+        <a href="/admin.html" class="btn btn-sm btn-danger" id="exportData">Admin</a>
+    </div>
+  </div>
 </div>
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/jquery-migrate-1.4.1.min.js"></script>

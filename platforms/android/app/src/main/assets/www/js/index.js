@@ -30,73 +30,107 @@ var app = {
         this.receivedEvent('deviceready');
         document.addEventListener("deviceready", onDeviceReady, false);
         function onDeviceReady() {
-            console.log(cordova.file.applicationDirectory);
+    
         }
 
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-        function gotFS(fileSystem) {
-            fileSystem.root.getDirectory("DO_NOT_DELETE", 
-                {create: true, exclusive: false}, 
-                gotDirEntry, 
-                fail);
-        }
-        function gotDirEntry(dirEntry) {
-            dir = dirEntry;
-            dirEntry.getFile("sample.json", 
-                {create: false, exclusive: false}, 
-                readSuccess, 
-                fileDonotexist);
-        }
-        function fileDonotexist(dirEntry) {
-            dir.getFile("sample.json", 
-                {create: true, exclusive: false}, 
-                gotFileEntry, 
-                fail);
-        }
-        function gotFileEntry(fileEntryWrite) {
-            fileEntryWrite.createWriter(gotFileWriter, fail);
-        }
-        function gotFileWriter(writer) {
-            writer.onerror = function(evt) {
-            };
-            writer.write(localData);
-            writer.onwriteend = function(evt) {
-                dir.getFile("sample.json", 
-                    {create: false, exclusive: false}, 
-                    readSuccess, 
-                    fail);
-            };
-        }
-        function readSuccess(fileE) {
-            fileE.file(readAsText, fail);
-        }
-        function fail(error) {
-            console.log("fail");
-        }
-        function readAsText(readerDummy) {
-            var reader = new FileReader();
+        function createFile() {
+           var type = window.PERSISTENT;
+           var size = 5*1024*1024;
+           window.requestFileSystem(type, size, successCallback, errorCallback)
 
-            reader.onloadstart = function(evt) {};
-            reader.onprogress = function(evt) {};
-            reader.onerror = function(evt) {};
+           function successCallback(fs) {
+              fs.root.getFile('test.txt', {create: true, exclusive: true}, function(fileEntry) {
+                 alert('File creation successfull!')
+              }, errorCallback);
+           }
 
-            reader.onloadend = function(evt) {
-                console.log("read success");
-            };
-            reader.readAsText(readerDummy);
+           function errorCallback(error) {
+              alert("ERROR: " + error.code)
+           }
+            
         }
+
+        function writeFile(data) {
+           var type = window.PERSISTENT;
+           var size = 5*1024*1024;
+           window.requestFileSystem(type, size, successCallback, errorCallback)
+
+           function successCallback(fs) {
+              fs.root.getFile('formdata.txt', {create: true}, function(fileEntry) {
+
+                 fileEntry.createWriter(function(fileWriter) {
+                    fileWriter.onwriteend = function(e) {
+                       alert('Thank you!');
+                    };
+
+                    fileWriter.onerror = function(e) {
+                       alert('Write failed: ' + e.toString());
+                    };
+
+                    var blob = new Blob([data], {type: 'text/plain'});
+                    fileWriter.write(blob);
+                 }, errorCallback);
+              }, errorCallback);
+           }
+
+           function errorCallback(error) {
+              alert("ERROR: " + error.code)
+           }
+        }
+
+        function readFile(data) {
+           var type = window.PERSISTENT;
+           var size = 5*1024*1024;
+           window.requestFileSystem(type, size, successCallback, errorCallback)
+
+           function successCallback(fs) {
+              fs.root.getFile('test.txt', {}, function(fileEntry) {
+
+                 fileEntry.file(function(file) {
+                    var reader = new FileReader();
+
+                    reader.onloadend = function(e) {
+                       var txtArea = document.getElementById('notes');
+                       txtArea.value = this.result;
+                       writeFile(data);
+                    };
+                    reader.readAsText(file);
+                 }, errorCallback);
+              }, errorCallback);
+           }
+
+           function errorCallback(error) {
+              alert("ERROR: " + error.code)
+           }
+        }
+
+        document.getElementById("submit").addEventListener("click", submitbtn);
+
+        function submitbtn() {
+            var e = this.event;
+            var data = [];
+            var inputs = document.getElementsByTagName('input');
+            var notes = document.getElementById('notes');
+
+            for (var i = 0; i < inputs.length; i++) {
+                data.push(inputs[i].value);
+            }
+            data.push(notes.value.replace(/,/g,""));
+            try {
+              readFile(data);
+          } catch(err) {
+              console.log("Error while writing data " +err);
+          }
+          console.log(data);
+        }
+
+        
     },
 
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         var parentElement = document.getElementById(id);
-        // var listeningElement = parentElement.querySelector('.listening');
-        // var receivedElement = parentElement.querySelector('.received');
-
-        // listeningElement.setAttribute('style', 'display:none;');
-        // receivedElement.setAttribute('style', 'display:block;');
-
-        // console.log('Received Event: ' + id);
+      
     }
 
 };
