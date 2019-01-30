@@ -36,16 +36,13 @@ var app = {
         function createFile() {
            var type = window.PERSISTENT;
            var size = 5*1024*1024;
-           window.requestFileSystem(type, size, successCallback, errorCallback)
+           window.requestFileSystem(type, size, successCallback, errorCallback);
 
            function successCallback(fs) {
-              fs.root.getFile('formdata.txt', {create: true, exclusive: true}, function(fileEntry) {
-                 alert('File creation successfull!')
+              fs.root.getFile('formdata.txt', {create: true, exclusive: true, type: 'text/plain'}, function(fileEntry) {
+                 console.log('File creation successful!');
+                 readFile(fileEntry.file);
               }, errorCallback);
-           }
-
-           function errorCallback(error) {
-              alert("ERROR: " + error.code)
            }
             
         }
@@ -53,63 +50,67 @@ var app = {
         function writeFile(data) {
            var type = window.PERSISTENT;
            var size = 5*1024*1024;
-           window.requestFileSystem(type, size, successCallback, errorCallback)
+           window.requestFileSystem(type, size, successCallback, errorCallback);
 
            function successCallback(fs) {
-              fs.root.getFile('formdata.txt', {create: true}, function(fileEntry) {
-                 fileEntry.createWriter(function(fileWriter) {
-                    fileWriter.onwriteend = function(e) {
-                       alert('Thank you!');
-                    };
+              fs.root.getFile('formdata.txt', {create: false}, function(fileEntry) {
+                    var reader = '';
+                    fileEntry.file(function(file) {
+                        reader = new FileReader(file);
+                        reader.readAsText(file);
+                        reader.onloadend = function(e) {
+                             fileEntry.createWriter(function(fileWriter) {
+                                if ( reader.result !== '' ) {
+                                    var data_appended = [];
+                                    data_appended.push(reader.result);
+                                    data_appended.push(data);
+                                    var blob = new Blob(data_appended, {type: 'text/plain'});
+                                    fileWriter.write(blob);
+                                } else {
+                                    var blob = new Blob([data], {type: 'text/plain'});
+                                    fileWriter.write(blob);
+                                }
+                                fileWriter.onwriteend = function(e) {
+                                   console.log('Thank you!');
+                                   readFile(fileEntry.file);
+                                };
 
-                    fileWriter.onerror = function(e) {
-                       alert('Write failed: ' + e.toString());
-                    };
-
-                    var blob = new Blob([data], {type: 'text/plain'});
-                    fileWriter.write(blob);
+                                fileWriter.onerror = function(e) {
+                                   console.log('Write failed: ' + e.toString());
+                                };
+                            });
+                        }
                  }, errorCallback);
               }, errorCallback);
            }
 
-           function errorCallback(error) {
-              alert("ERROR: " + error.code)
-           }
         }
 
         function readFile(data) {
            var type = window.PERSISTENT;
            var size = 5*1024*1024;
-           window.requestFileSystem(type, size, successCallback, errorCallback)
+           window.requestFileSystem(type, size, successCallback, errorCallback);
 
            function successCallback(fs) {
               fs.root.getFile('formdata.txt', {}, function(fileEntry) {
 
                  fileEntry.file(function(file) {
-
                     var reader = new FileReader(file);
-                    reader.onloadend = function(e) {
-                       var txtArea = document.getElementById('notes');
-                       txtArea.value = this.result;
-                       var appendFile = this.result.split(",");
-                       appendFile.push(data);
-                       console.log(appendFile);
-                       writeFile(appendFile);
-                    };
                     reader.readAsText(file);
+                    reader.onloadend = function(e) {
+                        console.log( reader.result );
+                        
+                    };
                  }, createFile);
               }, createFile);
            }
 
-           function errorCallback(error) {
-              alert("ERROR: " + error.code)
-           }
         }
 
         function removeFile(myfile) {
            var type = window.PERSISTENT;
            var size = 5*1024*1024;
-           window.requestFileSystem(type, size, successCallback, errorCallback)
+           window.requestFileSystem(type, size, successCallback, errorCallback);
 
            function successCallback(fs) {
               fs.root.getFile('formdata.txt', {create: false}, function(fileEntry) {
@@ -119,18 +120,14 @@ var app = {
                  }, errorCallback);
               }, errorCallback);
            }
-
-           function errorCallback(error) {
-              alert("ERROR: " + error.code)
-           }
         }
 
         document.getElementById("submit").addEventListener("click", submitbtn);
         document.getElementById("exportData").addEventListener("click", downloadFile);
 
 
-        function submitbtn() {
-            var e = this.event;
+        function submitbtn(e) {
+            e.preventDefault();
             var data = [];
             var inputs = document.getElementsByTagName('input');
             var notes = document.getElementById('notes');
@@ -139,17 +136,19 @@ var app = {
                 data.push(inputs[i].value);
             }
             data.push(notes.value.replace(/,/g,""));
+            data = JSON.stringify( data );
             try {
-              readFile(data);
+              writeFile(data);
+              for (var i = 0; i < inputs.length; i++) {
+                  inputs[i].value = '';
+              }
+              notes.value = '';
           } catch(err) {
               console.log("Error while writing data " +err);
           }
-          // console.log(data);
         }
 
         function downloadFile(file) {
-           
-
            var fileTransfer = new FileTransfer();
            var file = file;
            var fileURL =  "///storage/emulated/0/DCIM/formdata.csv";
@@ -171,6 +170,10 @@ var app = {
                  }
               }
            );
+        }
+
+        function errorCallback(error) {
+            alert("ERROR: " + error.code);
         }
     },
 
