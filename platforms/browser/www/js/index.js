@@ -30,7 +30,7 @@ var app = {
         this.receivedEvent('deviceready');
         document.addEventListener("deviceready", onDeviceReady, false);
         function onDeviceReady() {
-            // readFile();
+            readFile();
         }
 
         function createFile() {
@@ -130,7 +130,7 @@ var app = {
               fs.root.getFile('formdata.txt', {create: false}, function(fileEntry) {
 
                  fileEntry.remove(function() {
-                    alert('File removed.');
+                    alert('All data has been deleted.');
                  }, errorCallback);
               }, errorCallback);
            }

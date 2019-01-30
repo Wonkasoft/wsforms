@@ -30,7 +30,7 @@ var app = {
         this.receivedEvent('deviceready');
         document.addEventListener("deviceready", onDeviceReady, false);
         function onDeviceReady() {
-            // readFile();
+            readFile();
         }
 
         function createFile() {

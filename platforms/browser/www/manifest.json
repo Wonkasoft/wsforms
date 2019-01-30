@@ -3,8 +3,8 @@
   "display": "standalone",
   "name": "WS Forms",
   "short_name": "WS Forms",
-  "version": "io.cordova.hellocordova",
-  "description": "A custom app for an off-line webfor",
+  "version": "io.cordova.wsform",
+  "description": "A custom app for an off-line webform",
   "author": "Wonkasoft Team",
   "icons": [],
   "start_url": "index.html"
