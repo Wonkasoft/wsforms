@@ -157,7 +157,7 @@ var app = {
         if ( document.getElementById("btn-hidden") ) {
             document.getElementById("btn-hidden").addEventListener("click", function(e) {
                 e.preventDefault();
-                var admin_btns = document.querySelectorAll('.admin-btn-row a');
+                var admin_btns = document.querySelectorAll('.admin-btn-row button');
                 admin_btns.forEach( function(el) {
                     el.style.top = "-61px";
                     el.addEventListener("blur", function(e) {
