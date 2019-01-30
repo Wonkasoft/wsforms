@@ -30,7 +30,7 @@ var app = {
         this.receivedEvent('deviceready');
         document.addEventListener("deviceready", onDeviceReady, false);
         function onDeviceReady() {
-            readFile();
+            // readFile();
         }
 
         function createFile() {
@@ -130,7 +130,7 @@ var app = {
               fs.root.getFile('formdata.txt', {create: false}, function(fileEntry) {
 
                  fileEntry.remove(function() {
-                    alert('File removed.');
+                    alert('All data has been deleted.');
                  }, errorCallback);
               }, errorCallback);
            }
@@ -140,11 +140,12 @@ var app = {
             document.getElementById("submit").addEventListener("click", submitbtn);
         }
         if ( document.getElementById("export-btn") ) {
-            document.getElementById("submit").addEventListener("click", submitbtn);
+            document.getElementById("export-btn").addEventListener("click", exportCSV);
         }
         if ( document.getElementById("delete-btn") ) {
-            document.getElementById("submit").addEventListener("click", submitbtn);
-        }
+            document.getElementById("delete-btn").addEventListener("click", removeFile);
+        } 
+
         
 
         function submitbtn(e) {
@@ -171,6 +172,17 @@ var app = {
 
         function errorCallback(error) {
             alert("ERROR: " + error.code);
+        }
+
+        function exportCSV(data) {
+          let csvContent = "data:text/csv;charset=utf-8,";
+          rows.forEach(function(rowArray){
+             let row = rowArray.join(",");
+             csvContent += row + "\r\n";
+          }); 
+
+          var encodedUri = encodeURI(csvContent);
+          window.open(encodedUri);
         }
     },
 

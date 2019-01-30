@@ -30,7 +30,7 @@ var app = {
         this.receivedEvent('deviceready');
         document.addEventListener("deviceready", onDeviceReady, false);
         function onDeviceReady() {
-            readFile();
+            // readFile();
         }
 
         function createFile() {
@@ -139,7 +139,14 @@ var app = {
         if ( document.getElementById("submit") ) {
             document.getElementById("submit").addEventListener("click", submitbtn);
         }
+        if ( document.getElementById("export-btn") ) {
+            document.getElementById("export-btn").addEventListener("click", exportCSV);
+        }
+        if ( document.getElementById("delete-btn") ) {
+            document.getElementById("delete-btn").addEventListener("click", removeFile);
+        } 
 
+        
 
         function submitbtn(e) {
             e.preventDefault();
@@ -165,6 +172,17 @@ var app = {
 
         function errorCallback(error) {
             alert("ERROR: " + error.code);
+        }
+
+        function exportCSV(data) {
+          let csvContent = "data:text/csv;charset=utf-8,";
+          rows.forEach(function(rowArray){
+             let row = rowArray.join(",");
+             csvContent += row + "\r\n";
+          }); 
+
+          var encodedUri = encodeURI(csvContent);
+          window.open(encodedUri);
         }
     },
 

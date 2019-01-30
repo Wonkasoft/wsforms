@@ -10,10 +10,10 @@
     "cordova-plugin-file": {
       "PACKAGE_NAME": "io.cordova.hellocordova"
     },
-    "cordova-plugin-whitelist": {
+    "cordova-plugin-file-transfer": {
       "PACKAGE_NAME": "io.cordova.hellocordova"
     },
-    "cordova-plugin-file-transfer": {
+    "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "io.cordova.hellocordova"
     }
   },
