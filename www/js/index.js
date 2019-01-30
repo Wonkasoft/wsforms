@@ -30,7 +30,7 @@ var app = {
         this.receivedEvent('deviceready');
         document.addEventListener("deviceready", onDeviceReady, false);
         function onDeviceReady() {
-            // readFile();
+            readFile();
         }
 
         function createFile() {
@@ -60,15 +60,20 @@ var app = {
                         reader.readAsText(file);
                         reader.onloadend = function(e) {
                              fileEntry.createWriter(function(fileWriter) {
+                                var data_appended = [];
                                 if ( reader.result !== '' ) {
-                                    var data_appended = [];
-                                    data_appended.push( JSON.parse( reader.result ) );
+                                    var get_result = JSON.parse( reader.result );
+                                    get_result.forEach( function( record ) {
+                                        data_appended.push( record );
+                                    } );
                                     data_appended.push( JSON.parse( data ) );
                                     data_appended = JSON.stringify( data_appended );
                                     var blob = new Blob([data_appended], {type: 'text/plain'});
                                     fileWriter.write(blob);
                                 } else {
-                                    var blob = new Blob([data], {type: 'text/plain'});
+                                    data_appended.push( JSON.parse( data ) );
+                                    data_appended = JSON.stringify( data_appended );
+                                    var blob = new Blob([data_appended], {type: 'text/plain'});
                                     fileWriter.write(blob);
                                 }
                                 fileWriter.onwriteend = function(e) {
@@ -99,7 +104,7 @@ var app = {
                     var reader = new FileReader(file);
                     reader.readAsText(file);
                     reader.onloadend = function(e) {
-                        if ( document.getElementById('datatable') ) {
+                        if ( document.getElementById('datatable') && reader.result !== '' ) {
                             var file_data = JSON.parse( reader.result );
                             var table_headers = document.getElementById('table-headers');
                             var table_content = document.getElementById('table-content');
