@@ -108,6 +108,7 @@ var app = {
                             var file_data = JSON.parse( reader.result );
                             var table_headers = document.getElementById('table-headers');
                             var table_content = document.getElementById('table-content');
+                            table_content.innerHTML = '';
                             file_data.forEach( function( record ) {
                                 var create_tr = document.createElement('TR');
                                 record.forEach( function( record_info ) {
@@ -133,9 +134,13 @@ var app = {
            function successCallback(fs) {
               fs.root.getFile('formdata.txt', {create: false}, function(fileEntry) {
 
-                 fileEntry.remove(function() {
-                    alert('All data has been deleted.');
-                 }, errorCallback);
+                var result = confirm("Want to delete?");
+                if ( result ) {
+                     fileEntry.remove(function() {
+                        alert('All data has been deleted.');
+                        location.reload();
+                     }, errorCallback);
+                }
               }, errorCallback);
            }
         }
@@ -152,19 +157,65 @@ var app = {
         if ( document.getElementById("btn-hidden") ) {
             document.getElementById("btn-hidden").addEventListener("click", function(e) {
                 e.preventDefault();
-                var admin_btn = document.querySelectorAll('.admin-btn-row a');
-                admin_btn.forEach( function(el) {
+                var admin_btns = document.querySelectorAll('.admin-btn-row a');
+                admin_btns.forEach( function(el) {
                     el.style.top = "-61px";
                     el.addEventListener("blur", function(e) {
-                        admin_btn.forEach( function(el) {
+                        setTimeout( function() {
+                            admin_btns.forEach( function(el) {
                             el.style.top = "-5px";
-                        });
+
+                            });
+                        }, 250 );
                     });
                 });
             });
         } 
+        if ( document.getElementById( 'adminData' ) ) {
+            document.getElementById("adminData").addEventListener("click", function(e) {
+                e.preventDefault();
+                var admin_btn_link = document.getElementById("adminData");
+                var main_ui = document.getElementById( 'main-ui' );
+                var admin_side = document.getElementById( 'admin-side' );
+                set_ui_content( admin_btn_link, main_ui, admin_side );
+            });
+        }
+        if ( document.getElementById( 'home' ) ) {
+            document.getElementById( 'home' ).addEventListener("click", function(e) {
+                e.preventDefault();
+                var home_btn_link = document.getElementById( 'home' );
+                var main_ui = document.getElementById( 'main-ui' );
+                var admin_side = document.getElementById( 'admin-side' );
+                set_ui_content( home_btn_link, main_ui, admin_side );
+            });
+        }
 
-        
+        function set_ui_content( clicked_btn, main, admin ) {
+            if ( clicked_btn.id === 'adminData' ) {
+                main.style.opacity = 0;
+                setTimeout( function() {
+                    main.style.display = 'none';
+                    setTimeout( function() {
+                        admin.style.display = 'block';
+                        setTimeout( function() {
+                            admin.style.opacity = 1;
+                        }, 250);
+                    }, 250);
+                }, 250);
+            }
+            if ( clicked_btn.id === 'home' ) {
+                admin.style.opacity = 0;
+                setTimeout( function() {
+                    admin.style.display = 'none';
+                    setTimeout( function() {
+                        main.style.display = 'block';
+                        setTimeout( function() {
+                            main.style.opacity = 1;
+                        }, 250);
+                    }, 250);
+                }, 250);
+            }
+        }
 
         function submitbtn(e) {
             e.preventDefault();
@@ -206,6 +257,7 @@ var app = {
                      reader.onloadend = function(e) {
                         var file_data = JSON.parse( reader.result );
                          let csvContent = "data:text/csv;charset=utf-8,";
+                            csvContent += "firstName,lastName,dateOfBirth,email,zipCode,notes\r\n";
                          file_data.forEach(function(recordArray){
                             let row = recordArray.join(",");
                             csvContent += row + "\r\n";

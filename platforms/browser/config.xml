@@ -15,5 +15,7 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <allow-intent href="data:*" />
+    <allow-intent href="#" />
     <preference name="iosPersistentFileLocation" value="Compatibility" />
 </widget>

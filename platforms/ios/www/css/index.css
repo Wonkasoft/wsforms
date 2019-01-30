@@ -127,6 +127,23 @@ form .form-group button:hover, .admin-btn-row a:hover {
     box-shadow: 0 2px 0 #b61726;
 }
 
+#main-ui, #admin-side {
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+}
+
+#main-ui {
+    display: block;
+    opacity: 1;
+}
+
+#admin-side {
+    display: none;
+    opacity: 0;
+}
+
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
     .app {
