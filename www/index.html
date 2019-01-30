@@ -37,7 +37,7 @@
             <title>WS Forms</title>
         </head>
         <body>
-            <div class="container">
+            <div id="main-ui" class="container">
               <div class="row">
                 <div class="col panel">
                   <hr class="hr" />
@@ -95,10 +95,43 @@
 </div>
 <div class="row align-items-center justify-content-end admin-btn-row">
   <div class="col-12 text-right">
-      <a href="/admin.html" class="btn btn-danger" id="exportData">Admin</a>
+      <a href="#" class="btn btn-small btn-danger" id="btn-hidden">&uarr;</a>
+    </div>
+    <div class="col-12 text-right">
+      <a href="#" class="btn btn-danger" id="adminData">Admin</a>
     </div>
   </div>
 </div>
+<div id="admin-side" class="container">
+              <div class="row">
+                <div class="col panel">
+                  <hr class="hr" />
+                  <div class="text-center"><img class="img-fluid" src="img/mercury-events.png" alt="Logo" /></div>
+                  <hr class="hr" />
+                    <div class="text-right col">
+
+                        <a href="#" id="home" class="btn btn-md btn-primary">Back To Form</a>
+                        <button id="export-btn" class="btn btn-md btn-secondary">Export Data To CSV</button>
+                        <button type="submit" id="delete-btn" class="btn btn-md btn-danger">Delete All Data</button>
+                    </div>
+                    <h2>Form Data</h2>
+                    <p>You can download all data by clicking on the export button</p>    
+                    <table id="datatable" class="table table-striped">
+                      <thead id="table-headers">
+                        <tr>
+                          <th>Firstname</th>
+                          <th>Lastname</th>
+                          <th>Date of Birth</th>
+                          <th>Email</th>
+                          <th>Zip Code</th>
+                          <th>Notes</th>
+                        </tr>
+                      </thead>
+                      <tbody id="table-content">
+                      </tbody>
+                    </table>
+              </div>
+            </div>
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/jquery-migrate-1.4.1.min.js"></script>
 <script src="js/bootstrap.js"></script>

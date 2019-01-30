@@ -119,7 +119,7 @@ var app = {
                             } );
                         }
                     };
-                 }, createFile);
+                 }, errorCallback);
               }, createFile);
            }
 
@@ -148,6 +148,20 @@ var app = {
         }
         if ( document.getElementById("delete-btn") ) {
             document.getElementById("delete-btn").addEventListener("click", removeFile);
+        } 
+        if ( document.getElementById("btn-hidden") ) {
+            document.getElementById("btn-hidden").addEventListener("click", function(e) {
+                e.preventDefault();
+                var admin_btn = document.querySelectorAll('.admin-btn-row a');
+                admin_btn.forEach( function(el) {
+                    el.style.top = "-61px";
+                    el.addEventListener("blur", function(e) {
+                        admin_btn.forEach( function(el) {
+                            el.style.top = "-5px";
+                        });
+                    });
+                });
+            });
         } 
 
         
@@ -178,15 +192,35 @@ var app = {
             alert("ERROR: " + error.code);
         }
 
-        function exportCSV(data) {
-          let csvContent = "data:text/csv;charset=utf-8,";
-          rows.forEach(function(rowArray){
-             let row = rowArray.join(",");
-             csvContent += row + "\r\n";
-          }); 
+        function exportCSV() {
+            var type = window.PERSISTENT;
+            var size = 5*1024*1024;
+            window.requestFileSystem(type, size, successCallback, errorCallback);
 
-          var encodedUri = encodeURI(csvContent);
-          window.open(encodedUri);
+            function successCallback(fs) {
+               fs.root.getFile('formdata.txt', {}, function(fileEntry) {
+
+                  fileEntry.file(function(file) {
+                     var reader = new FileReader(file);
+                     reader.readAsText(file);
+                     reader.onloadend = function(e) {
+                        var file_data = JSON.parse( reader.result );
+                         let csvContent = "data:text/csv;charset=utf-8,";
+                         file_data.forEach(function(recordArray){
+                            let row = recordArray.join(",");
+                            csvContent += row + "\r\n";
+                         }); 
+
+                         var encodedUri = encodeURI(csvContent);
+                         var link = document.createElement("A");
+                         link.setAttribute( 'href', encodedUri );
+                         link.setAttribute( 'download', "form_data.csv" );
+                         document.body.appendChild(link);
+                         link.click();
+                     };
+                  }, errorCallback);
+               }, errorCallback);
+            }
         }
     },
 
