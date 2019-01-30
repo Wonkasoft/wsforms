@@ -62,9 +62,10 @@ var app = {
                              fileEntry.createWriter(function(fileWriter) {
                                 if ( reader.result !== '' ) {
                                     var data_appended = [];
-                                    data_appended.push(reader.result);
-                                    data_appended.push(data);
-                                    var blob = new Blob(data_appended, {type: 'text/plain'});
+                                    data_appended.push( JSON.parse( reader.result ) );
+                                    data_appended.push( JSON.parse( data ) );
+                                    data_appended = JSON.stringify( data_appended );
+                                    var blob = new Blob([data_appended], {type: 'text/plain'});
                                     fileWriter.write(blob);
                                 } else {
                                     var blob = new Blob([data], {type: 'text/plain'});
@@ -98,8 +99,21 @@ var app = {
                     var reader = new FileReader(file);
                     reader.readAsText(file);
                     reader.onloadend = function(e) {
-                        console.log( reader.result );
-                        
+                        if ( document.getElementById('datatable') ) {
+                            var file_data = JSON.parse( reader.result );
+                            var table_headers = document.getElementById('table-headers');
+                            var table_content = document.getElementById('table-content');
+                            console.log(file_data);
+                            file_data.forEach( function( record ) {
+                                var create_tr = document.createElement('TR');
+                                record.forEach( function( record_info ) {
+                                    var create_td = document.createElement('TD');
+                                    create_td.appendChild( document.createTextNode( record_info ) );
+                                    create_tr.appendChild( create_td );
+                                } );
+                                table_content.appendChild( create_tr );
+                            } );
+                        }
                     };
                  }, createFile);
               }, createFile);
@@ -122,8 +136,9 @@ var app = {
            }
         }
 
-        document.getElementById("submit").addEventListener("click", submitbtn);
-        document.getElementById("exportData").addEventListener("click", downloadFile);
+        if ( document.getElementById("submit") ) {
+            document.getElementById("submit").addEventListener("click", submitbtn);
+        }
 
 
         function submitbtn(e) {
@@ -146,30 +161,6 @@ var app = {
           } catch(err) {
               console.log("Error while writing data " +err);
           }
-        }
-
-        function downloadFile(file) {
-           var fileTransfer = new FileTransfer();
-           var file = file;
-           var fileURL =  "///storage/emulated/0/DCIM/formdata.csv";
-
-           fileTransfer.download(
-              file, fileURL, function(entry) {
-                 console.log("download complete: " + entry.toURL());
-              },
-                
-              function(error) {
-                 console.log("download error source " + error.source);
-                 console.log("download error target " + error.target);
-                 console.log("download error code" + error.code);
-              },
-                
-              false, {
-                 headers: {
-                    "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
-                 }
-              }
-           );
         }
 
         function errorCallback(error) {
