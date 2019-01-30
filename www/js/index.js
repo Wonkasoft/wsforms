@@ -139,7 +139,13 @@ var app = {
         if ( document.getElementById("submit") ) {
             document.getElementById("submit").addEventListener("click", submitbtn);
         }
-
+        if ( document.getElementById("export-btn") ) {
+            document.getElementById("submit").addEventListener("click", submitbtn);
+        }
+        if ( document.getElementById("delete-btn") ) {
+            document.getElementById("submit").addEventListener("click", submitbtn);
+        }
+        
 
         function submitbtn(e) {
             e.preventDefault();
