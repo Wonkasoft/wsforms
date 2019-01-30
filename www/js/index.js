@@ -108,7 +108,6 @@ var app = {
                             var file_data = JSON.parse( reader.result );
                             var table_headers = document.getElementById('table-headers');
                             var table_content = document.getElementById('table-content');
-                            console.log(file_data);
                             file_data.forEach( function( record ) {
                                 var create_tr = document.createElement('TR');
                                 record.forEach( function( record_info ) {
