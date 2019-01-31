@@ -34,7 +34,7 @@ var app = {
         }
 
         function createFile() {
-           var type = window.PERSISTENT;
+           var type = LocalFileSystem.PERSISTENT;
            var size = 5*1024*1024;
            window.requestFileSystem(type, size, successCallback, errorCallback);
 
@@ -48,7 +48,7 @@ var app = {
         }
 
         function writeFile(data) {
-           var type = window.PERSISTENT;
+           var type = LocalFileSystem.PERSISTENT;
            var size = 5*1024*1024;
            window.requestFileSystem(type, size, successCallback, errorCallback);
 
@@ -77,12 +77,12 @@ var app = {
                                     fileWriter.write(blob);
                                 }
                                 fileWriter.onwriteend = function(e) {
-                                   console.log('Thank you!');
+                                   alert('Thank you!');
                                    readFile(fileEntry.file);
                                 };
 
                                 fileWriter.onerror = function(e) {
-                                   console.log('Write failed: ' + e.toString());
+                                   alert('Write failed: ' + e.toString());
                                 };
                             });
                         }
@@ -93,12 +93,12 @@ var app = {
         }
 
         function readFile(data) {
-           var type = window.PERSISTENT;
-           var size = 5*1024*1024;
+           var type = LocalFileSystem.PERSISTENT;
+           var size = 5 * 1024 * 1024;
            window.requestFileSystem(type, size, successCallback, errorCallback);
 
            function successCallback(fs) {
-              fs.root.getFile('formdata.txt', {}, function(fileEntry) {
+              fs.root.getFile('formdata.txt', {create: false}, function(fileEntry) {
 
                  fileEntry.file(function(file) {
                     var reader = new FileReader(file);
@@ -127,7 +127,7 @@ var app = {
         }
 
         function removeFile(myfile) {
-           var type = window.PERSISTENT;
+           var type = LocalFileSystem.PERSISTENT;
            var size = 5*1024*1024;
            window.requestFileSystem(type, size, successCallback, errorCallback);
 
@@ -166,7 +166,7 @@ var app = {
                             el.style.top = "-5px";
 
                             });
-                        }, 250 );
+                        }, 100 );
                     });
                 });
             });
@@ -199,9 +199,9 @@ var app = {
                         admin.style.display = 'block';
                         setTimeout( function() {
                             admin.style.opacity = 1;
-                        }, 250);
-                    }, 250);
-                }, 250);
+                        }, 100);
+                    }, 100);
+                }, 100);
             }
             if ( clicked_btn.id === 'home' ) {
                 admin.style.opacity = 0;
@@ -211,9 +211,9 @@ var app = {
                         main.style.display = 'block';
                         setTimeout( function() {
                             main.style.opacity = 1;
-                        }, 250);
-                    }, 250);
-                }, 250);
+                        }, 100);
+                    }, 100);
+                }, 100);
             }
         }
 
@@ -235,7 +235,7 @@ var app = {
               }
               notes.value = '';
           } catch(err) {
-              console.log("Error while writing data " +err);
+              alert("Error while writing data " +err);
           }
         }
 
@@ -244,13 +244,12 @@ var app = {
         }
 
         function exportCSV() {
-            var type = window.PERSISTENT;
+            var type = LocalFileSystem.PERSISTENT;
             var size = 5*1024*1024;
             window.requestFileSystem(type, size, successCallback, errorCallback);
 
             function successCallback(fs) {
-               fs.root.getFile('formdata.txt', {}, function(fileEntry) {
-
+               fs.root.getFile('formdata.txt', { create: false}, function(fileEntry) {
                   fileEntry.file(function(file) {
                      var reader = new FileReader(file);
                      reader.readAsText(file);
