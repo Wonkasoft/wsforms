@@ -31,6 +31,33 @@ var app = {
         document.addEventListener("deviceready", onDeviceReady, false);
         var browser_open = cordova.InAppBrowser;
         var current_platform = device.platform;
+        if ( document.getElementById("submit") ) {
+            document.getElementById("submit").addEventListener("click", submitbtn);
+        }
+        if ( document.getElementById("export-btn") ) {
+            document.getElementById("export-btn").addEventListener("click", exportCSV);
+        }
+        if ( document.getElementById("delete-btn") ) {
+            document.getElementById("delete-btn").addEventListener("click", removeFile);
+        } 
+        if ( document.getElementById( 'adminData' ) ) {
+            document.getElementById("adminData").addEventListener("click", function(e) {
+                e.preventDefault();
+                var admin_btn_link = document.getElementById("adminData");
+                var main_ui = document.getElementById( 'main-ui' );
+                var admin_side = document.getElementById( 'admin-side' );
+                set_ui_content( admin_btn_link, main_ui, admin_side );
+            });
+        }
+        if ( document.getElementById( 'home' ) ) {
+            document.getElementById( 'home' ).addEventListener("click", function(e) {
+                e.preventDefault();
+                var home_btn_link = document.getElementById( 'home' );
+                var main_ui = document.getElementById( 'main-ui' );
+                var admin_side = document.getElementById( 'admin-side' );
+                set_ui_content( home_btn_link, main_ui, admin_side );
+            });
+        }
         function onDeviceReady() {
             readFile();
         }
@@ -145,51 +172,6 @@ var app = {
                 }
               }, errorCallback);
            }
-        }
-
-        if ( document.getElementById("submit") ) {
-            document.getElementById("submit").addEventListener("click", submitbtn);
-        }
-        if ( document.getElementById("export-btn") ) {
-            document.getElementById("export-btn").addEventListener("click", exportCSV);
-        }
-        if ( document.getElementById("delete-btn") ) {
-            document.getElementById("delete-btn").addEventListener("click", removeFile);
-        } 
-        if ( document.getElementById("btn-hidden") ) {
-            document.getElementById("btn-hidden").addEventListener("click", function(e) {
-                e.preventDefault();
-                var admin_btns = document.querySelectorAll('.admin-btn-row button');
-                admin_btns.forEach( function(el) {
-                    el.style.top = "-61px";
-                    el.addEventListener("blur", function(e) {
-                        setTimeout( function() {
-                            admin_btns.forEach( function(el) {
-                            el.style.top = "-5px";
-
-                            });
-                        }, 100 );
-                    });
-                });
-            });
-        } 
-        if ( document.getElementById( 'adminData' ) ) {
-            document.getElementById("adminData").addEventListener("click", function(e) {
-                e.preventDefault();
-                var admin_btn_link = document.getElementById("adminData");
-                var main_ui = document.getElementById( 'main-ui' );
-                var admin_side = document.getElementById( 'admin-side' );
-                set_ui_content( admin_btn_link, main_ui, admin_side );
-            });
-        }
-        if ( document.getElementById( 'home' ) ) {
-            document.getElementById( 'home' ).addEventListener("click", function(e) {
-                e.preventDefault();
-                var home_btn_link = document.getElementById( 'home' );
-                var main_ui = document.getElementById( 'main-ui' );
-                var admin_side = document.getElementById( 'admin-side' );
-                set_ui_content( home_btn_link, main_ui, admin_side );
-            });
         }
 
         function set_ui_content( clicked_btn, main, admin ) {
