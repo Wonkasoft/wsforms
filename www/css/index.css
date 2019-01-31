@@ -111,6 +111,7 @@ form .form-group button, .admin-btn-row a#adminData {
     background: #dc3545;
     -webkit-box-shadow: 0 5px 0 #b61726;
     box-shadow: 0 5px 0 #b61726;
+    z-index: 500;
 }
 
 form .form-group button:hover, .admin-btn-row a#adminData:hover {
