@@ -29,6 +29,8 @@ var app = {
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
         document.addEventListener("deviceready", onDeviceReady, false);
+        var browser_open = cordova.InAppBrowser;
+        var current_platform = device.platform;
         function onDeviceReady() {
             readFile();
         }
@@ -39,7 +41,7 @@ var app = {
            window.requestFileSystem(type, size, successCallback, errorCallback);
 
            function successCallback(fs) {
-              fs.root.getFile('formdata.txt', {create: true, exclusive: true, type: 'text/plain'}, function(fileEntry) {
+              fs.root.getFile('formdata.txt', {create: true, exclusive: true}, function(fileEntry) {
                  console.log('File creation successful!');
                  readFile(fileEntry.file);
               }, errorCallback);
@@ -263,11 +265,15 @@ var app = {
                          }); 
 
                          var encodedUri = encodeURI(csvContent);
-                         var link = document.createElement("A");
-                         link.setAttribute( 'href', encodedUri );
-                         link.setAttribute( 'download', "form_data.csv" );
-                         document.body.appendChild(link);
-                         link.click();
+                         if ( current_platform === 'ios' ) {
+                            browser_open.open( encodedUri, "_blank", { location: "no", closebuttoncaption: "Done" } );
+                         } else {
+                             var link = document.createElement("A");
+                             link.setAttribute( 'href', encodedUri );
+                             link.setAttribute( 'download', "form_data.csv" );
+                             document.body.appendChild(link);
+                             link.click();
+                         }
                      };
                   }, errorCallback);
                }, errorCallback);
@@ -279,6 +285,11 @@ var app = {
     receivedEvent: function(id) {
         var parentElement = document.getElementById(id);
       
+    },
+    onFileSystemPathsReady: function() {
+        window.resolveLocalFileSystemURL( cordova.file.dataDirectory, function(dir) {
+            console.log(dir);
+        }, 'fail');
     }
 
 };

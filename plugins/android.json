@@ -18,6 +18,9 @@
     },
     "cordova-plugin-device": {
       "PACKAGE_NAME": "io.cordova.wsform"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "io.cordova.wsform"
     }
   },
   "dependent_plugins": {}

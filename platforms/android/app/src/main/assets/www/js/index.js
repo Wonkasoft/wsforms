@@ -29,28 +29,19 @@ var app = {
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
         document.addEventListener("deviceready", onDeviceReady, false);
+        var browser_open = cordova.InAppBrowser;
+        var current_platform = device.platform;
         function onDeviceReady() {
             readFile();
         }
-    },
 
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-      
-    }
-
-};
-
-app.initialize();
-
-function createFile() {
-           var type = window.PERSISTENT;
+        function createFile() {
+           var type = LocalFileSystem.PERSISTENT;
            var size = 5*1024*1024;
            window.requestFileSystem(type, size, successCallback, errorCallback);
 
            function successCallback(fs) {
-              fs.root.getFile('formdata.txt', {create: true, exclusive: true, type: 'text/plain'}, function(fileEntry) {
+              fs.root.getFile('formdata.txt', {create: true, exclusive: true}, function(fileEntry) {
                  console.log('File creation successful!');
                  readFile(fileEntry.file);
               }, errorCallback);
@@ -59,7 +50,7 @@ function createFile() {
         }
 
         function writeFile(data) {
-           var type = window.PERSISTENT;
+           var type = LocalFileSystem.PERSISTENT;
            var size = 5*1024*1024;
            window.requestFileSystem(type, size, successCallback, errorCallback);
 
@@ -104,12 +95,12 @@ function createFile() {
         }
 
         function readFile(data) {
-           var type = window.PERSISTENT;
-           var size = 5*1024*1024;
+           var type = LocalFileSystem.PERSISTENT;
+           var size = 5 * 1024 * 1024;
            window.requestFileSystem(type, size, successCallback, errorCallback);
 
            function successCallback(fs) {
-              fs.root.getFile('formdata.txt', {}, function(fileEntry) {
+              fs.root.getFile('formdata.txt', {create: false}, function(fileEntry) {
 
                  fileEntry.file(function(file) {
                     var reader = new FileReader(file);
@@ -138,7 +129,7 @@ function createFile() {
         }
 
         function removeFile(myfile) {
-           var type = window.PERSISTENT;
+           var type = LocalFileSystem.PERSISTENT;
            var size = 5*1024*1024;
            window.requestFileSystem(type, size, successCallback, errorCallback);
 
@@ -255,13 +246,12 @@ function createFile() {
         }
 
         function exportCSV() {
-            var type = window.PERSISTENT;
+            var type = LocalFileSystem.PERSISTENT;
             var size = 5*1024*1024;
             window.requestFileSystem(type, size, successCallback, errorCallback);
 
             function successCallback(fs) {
-               fs.root.getFile('formdata.txt', {}, function(fileEntry) {
-
+               fs.root.getFile('formdata.txt', { create: false}, function(fileEntry) {
                   fileEntry.file(function(file) {
                      var reader = new FileReader(file);
                      reader.readAsText(file);
@@ -275,13 +265,33 @@ function createFile() {
                          }); 
 
                          var encodedUri = encodeURI(csvContent);
-                         var link = document.createElement("A");
-                         link.setAttribute( 'href', encodedUri );
-                         link.setAttribute( 'download', "form_data.csv" );
-                         document.body.appendChild(link);
-                         link.click();
+                         if ( current_platform === 'ios' ) {
+                            browser_open.open( encodedUri, "_blank", { location: "no", closebuttoncaption: "Done" } );
+                         } else {
+                             var link = document.createElement("A");
+                             link.setAttribute( 'href', encodedUri );
+                             link.setAttribute( 'download', "form_data.csv" );
+                             document.body.appendChild(link);
+                             link.click();
+                         }
                      };
                   }, errorCallback);
                }, errorCallback);
             }
         }
+    },
+
+    // Update DOM on a Received Event
+    receivedEvent: function(id) {
+        var parentElement = document.getElementById(id);
+      
+    },
+    onFileSystemPathsReady: function() {
+        window.resolveLocalFileSystemURL( cordova.file.dataDirectory, function(dir) {
+            console.log(dir);
+        }, 'fail');
+    }
+
+};
+
+app.initialize();

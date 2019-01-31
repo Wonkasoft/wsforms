@@ -15,6 +15,9 @@
     <feature name="Device">
         <param name="android-package" value="org.apache.cordova.device.Device" />
     </feature>
+    <feature name="InAppBrowser">
+        <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
+    </feature>
     <name>WS Forms</name>
     <description>
         A custom app for an off-line webform
@@ -31,7 +34,7 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <allow-intent href="data:*" />
+    <allow-intent href="data:text/csv;charset=utf-8,*" />
     <allow-intent href="#" />
     <preference name="loglevel" value="DEBUG" />
     <preference name="iosPersistentFileLocation" value="Compatibility" />
