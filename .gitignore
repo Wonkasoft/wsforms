@@ -1,6 +1,11 @@
-*.mode1v3
-*.perspectivev3
-*.pbxuser
 .DS_Store
-node_modules/
-build/
+package-lock.json
+package.json
+gulpfile.js
+.DS_Store
+.phpintel
+phpcs.phar
+phpcbf.phar
+node_modules
+node_modules/*
+*.swp
